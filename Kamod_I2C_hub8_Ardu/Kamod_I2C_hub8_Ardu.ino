@@ -1,5 +1,5 @@
-//example code for KAmod I2C Hub4
-//control 4x MCP23008 with the same I2C address
+//example code for KAmod I2C Hub8
+//control 8x MCP23008 with the same I2C address
 //ino board: ESP32-WROOM-DA Module
 
 #include <Wire.h>
@@ -20,11 +20,15 @@
 #define I2C_FREQ        100000
 #define MCP23008_ARD    0x20
 
-#define TCA9546_ARD     0x70
-#define TCA9546_CH0     (1<<0)
-#define TCA9546_CH1     (1<<1)
-#define TCA9546_CH2     (1<<2)
-#define TCA9546_CH3     (1<<3)
+#define TCA9548_ARD     0x70
+#define TCA9548_CH0     (1<<0)
+#define TCA9548_CH1     (1<<1)
+#define TCA9548_CH2     (1<<2)
+#define TCA9548_CH3     (1<<3)
+#define TCA9548_CH4     (1<<4)
+#define TCA9548_CH5     (1<<5)
+#define TCA9548_CH6     (1<<6)
+#define TCA9548_CH7     (1<<7)
 
 TwoWire I2Cbus = TwoWire(0);
 Adafruit_MCP23X08 MCPIO;
@@ -34,7 +38,7 @@ int success;
 
 //--------------------------------------------------
 bool i2cHub(uint8_t ch_mask){
-  I2Cbus.beginTransmission(TCA9546_ARD);
+  I2Cbus.beginTransmission(TCA9548_ARD);
   I2Cbus.write(&ch_mask, 1);
   return I2Cbus.endTransmission(true);
 }
@@ -62,11 +66,11 @@ void setup() {
   }
 
   success = 0;
-  sel = 3;
+  sel = 7;
 
   while(1){
     sel++;
-    if (sel > 3) {
+    if (sel > 7) {
       sel = 0;
       delay(500);
     }
@@ -87,11 +91,11 @@ void setup() {
     Serial.print(sel);
     Serial.println();
 
-    if ((sel == 3) && (success > 0)) break;
+    if ((sel == 127) && (success > 0)) break;
   }
 
   Serial.println("Setup finished");
-  sel = 3;
+  sel = 7;
   i = 8;
   success = 0;
 }
@@ -99,12 +103,12 @@ void setup() {
 //-------------------------------------------------
 void loop() {
   i++;
-  if (i  >= 8){
+  if (i >= 8){
     i = 0;
     Serial.println(); Serial.println();
     while(1){
       sel++;
-      if (sel > 3) {
+      if (sel > 7) {
         sel = 0;
         delay(500); 
       }
@@ -140,9 +144,9 @@ void loop() {
   MCPIO.digitalWrite(i, TEST_LED_OFF);
   delay(100);
 
-  if (success >= 12) {
+  if (success >= 16) {
     Serial.println(); Serial.println(); Serial.println();
-    Serial.println("### Verify OK 3 times ###");
+    Serial.println("### Verify OK 2 times ###");
     Serial.println("### THATS ALL ###");
     while(1){};
   }
