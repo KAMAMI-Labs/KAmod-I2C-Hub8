@@ -17,7 +17,7 @@
 //I2C
 #define I2C_SDA         33
 #define I2C_SCL         32
-#define I2C_FREQ        100000
+#define I2C_FREQ        400000
 #define MCP23008_ARD    0x20
 
 #define TCA9548_ARD     0x70
@@ -55,7 +55,7 @@ void setup() {
   while (!Serial) {}
   delay(1000); // wait for native usb
   Serial.println(); Serial.println(); Serial.println();
-  Serial.println("Hello. KAmod I2C Hub4 test");
+  Serial.println("Hello. KAmod I2C Hub8 test");
 
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, HIGH);
@@ -72,6 +72,7 @@ void setup() {
     sel++;
     if (sel > 7) {
       sel = 0;
+      success = 0;
       delay(500);
     }
     i2cHub(1<<sel);
@@ -91,7 +92,7 @@ void setup() {
     Serial.print(sel);
     Serial.println();
 
-    if ((sel == 127) && (success > 0)) break;
+    if ((sel == 7) && (success > 0)) break;
   }
 
   Serial.println("Setup finished");
